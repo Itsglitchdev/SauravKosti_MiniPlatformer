@@ -14,6 +14,15 @@ public class UIManager : MonoBehaviour
     [Header("Text")]
     [SerializeField] private TextMeshProUGUI levelText;
 
+    void OnEnable()
+    {
+        EventBus.OnLevelTextSet += UpdateLevelText;
+    }
+
+    void OnDisable()
+    {
+        EventBus.OnLevelTextSet -= UpdateLevelText;
+    }
 
     void Start()
     {
@@ -37,6 +46,12 @@ public class UIManager : MonoBehaviour
     {
         menuPanel.SetActive(false);
         gamePanel.SetActive(true);
+        EventBus.OnGameStarted();
+    }
+
+    void UpdateLevelText(int level)
+    {
+        levelText.text = "Level " + level;
     }
     
     

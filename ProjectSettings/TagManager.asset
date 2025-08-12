@@ -5,15 +5,8 @@ TagManager:
   serializedVersion: 3
   tags:
   - Destroy_Object
-  - Stairs_Object
   - Block_Object
-  - Block_Trigger
-  - Size_Trigger
-  - Spikes_Trigger
   - Spikes_Object
-  - Spikes_Trigger_2
-  - Spikes_Trigger_3
-  - Block_Trigger_2
   layers:
   - Default
   - TransparentFX

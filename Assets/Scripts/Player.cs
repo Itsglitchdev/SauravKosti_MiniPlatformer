@@ -29,6 +29,9 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+
+        if(GameManager.Instance.IsGameStarted == false) return;
+
         moveInput = Input.GetAxisRaw("Horizontal");
 
         // Flip the sprite based on movement
@@ -51,9 +54,11 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+
+        if(GameManager.Instance.IsGameStarted == false) return;
+
         Vector2 rayOrigin = new Vector2(transform.position.x, transform.position.y - 0.5f);
         bool isGrounded = Physics2D.Raycast(rayOrigin, Vector2.down, groundCheckDistance, groundLayer);
-        // Debug.DrawRay(rayOrigin, Vector2.down * groundCheckDistance, Color.green);
 
         if (isGrounded ) // && myRigidbody2D.linearVelocity.y <= 0 (Double jump I want to stop it then add this thing because I am not going too far in Y)
         {
@@ -80,66 +85,73 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Destroy_Object"))
-        {
-            Destroy(collision.gameObject);
-        }
+    // private void OnTriggerEnter2D(Collider2D collision)
+    // {
+    //     if (collision.CompareTag("Destroy_Object"))
+    //     {
+    //         Destroy(collision.gameObject);
+    //     }
 
-        if (collision.CompareTag("Block_Trigger"))
-        {
-            Debug.Log("Positions Of blocks changing");
-            EventBus.TriggerBlockFall();
-        }
+    //     if (collision.CompareTag("Block_Trigger"))
+    //     {
+    //         Debug.Log("Positions Of blocks changing");
+    //         EventBus.TriggerBlockFall();
+    //     }
 
-        if (collision.CompareTag("Block_Object"))
-        {
-            Debug.Log("Player Collided with block");
-            // GameOver here
-        }
+    //     if (collision.CompareTag("Block_Object"))
+    //     {
+    //         Debug.Log("Player Collided with block");
+    //         // GameOver here
+    //     }
 
-        if (collision.CompareTag("Size_Trigger"))
-        {
-            // Debug.Log("Size changing");
-            EventBus.TriggerBlockSizeChange();
-            Destroy(collision.gameObject);
-        }
+    //     if (collision.CompareTag("Size_Trigger"))
+    //     {
+    //         // Debug.Log("Size changing");
+    //         EventBus.TriggerBlockSizeChange();
+    //         Destroy(collision.gameObject);
+    //     }
 
-        if (collision.CompareTag("Spikes_Trigger"))
-        {
-            // Debug.Log("Spikes Triggered");
-            EventBus.TriggerSpikesMovesFarAway();
-            Destroy(collision.gameObject);
-        }
+    //     if (collision.CompareTag("Spikes_Trigger"))
+    //     {
+    //         // Debug.Log("Spikes Triggered");
+    //         EventBus.TriggerSpikesMovesFarAway();
+    //         Destroy(collision.gameObject);
+    //     }
 
-        if (collision.CompareTag("Spikes_Trigger_2"))
-        {
-            // Debug.Log("Spikes Triggered");
-            EventBus.TriggerSpikesMovesComeClose();
-            Destroy(collision.gameObject);
-        }
+    //     if (collision.CompareTag("Spikes_Trigger_2"))
+    //     {
+    //         // Debug.Log("Spikes Triggered");
+    //         EventBus.TriggerSpikesMovesComeClose();
+    //         Destroy(collision.gameObject);
+    //     }
 
-        if (collision.CompareTag("Spikes_Trigger_3"))
-        {
-            // Debug.Log("Spikes Triggered");
-            EventBus.TriggerSpikesMovesChangePosition();
-            Destroy(collision.gameObject);
-        }
+    //     if (collision.CompareTag("Spikes_Trigger_3"))
+    //     {
+    //         // Debug.Log("Spikes Triggered");
+    //         EventBus.TriggerSpikesMovesChangePosition();
+    //         Destroy(collision.gameObject);
+    //     }
 
-        if (collision.CompareTag("Spikes_Object"))
-        {
-            Debug.Log("Player died");
-        }
+    //     if (collision.CompareTag("Spikes_Object"))
+    //     {
+    //         Debug.Log("Player died");
+    //     }
 
-        if (collision.CompareTag("Block_Trigger_2"))
-        {
-            // Debug.Log("Positions Of blocks changing");
-            EventBus.TriggerBlockMoveAndTryFall();
-            Destroy(collision.gameObject);
-        }
+    //     if (collision.CompareTag("Block_Trigger_2"))
+    //     {
+    //         // Debug.Log("Positions Of blocks changing");
+    //         EventBus.TriggerBlockMoveAndTryFall();
+    //         Destroy(collision.gameObject);
+    //     }
 
-    }
+    //     if (collision.CompareTag("Block_Trigger_3"))
+    //     {
+    //         // GameOver here
+    //         EventBus.TriggerBlockMove();
+    //         Destroy(collision.gameObject);
+    //     }
+
+    // }
 
     private void Jump()
     {

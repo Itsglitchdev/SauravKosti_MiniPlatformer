@@ -1,104 +1,135 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class LevelOneDesigner : MonoBehaviour
 {
 
     [Header("References")]
-    [SerializeField] private GameObject[] stairs;
-    [SerializeField] private GameObject[] blocks;
-    [SerializeField] private GameObject sizeBlock;
-    [SerializeField] private GameObject spike;
+    [SerializeField] private GameObject[] stairsOfBlocks;
+    [SerializeField] private GameObject[] blockss;
+    [SerializeField] private GameObject blockFall1;
+    [SerializeField] private GameObject blockSizeAndShrink2;
+    [SerializeField] private GameObject spike1;
     [SerializeField] private GameObject spike2;
     [SerializeField] private GameObject spike3;
-    [SerializeField] private GameObject block;
-
-    [Header("Blocks Settings")]
-    private float fallDistance = 6f;
-    private float fallSpeed = 10f;
+    [SerializeField] private GameObject block1;
+    [SerializeField] private GameObject block2;
+    [SerializeField] private GameObject block3;
 
 
     private void OnEnable()
     {
-        EventBus.OnBlockTrigger01 += BlocksFalling;
-        EventBus.OnBlockTrigger02 += SizeBlockEffect;
-        EventBus.OnSpikeTrigger01 += SpikePositionGoesFar;
-        EventBus.OnSpikeTrigger02 += SpikePositionComesClose;
-        EventBus.OnSpikeTrigger03 += SpikePositionDanger;
-        EventBus.OnBlockTrigger03 += BlockMoveAndTryFall;
+        EventBus.OnBlockTrigger01 += BlockTrigger01;
+        EventBus.OnBlockTrigger02 += BlockTrigger02;
+        EventBus.OnBlockTrigger03 += BlockTrigger03;
+        EventBus.OnBlockTrigger04 += BlockTrigger04;
+        EventBus.OnBlockTrigger05 += BlockTrigger05;
+        EventBus.OnBlockTrigger06 += BlockTrigger06;
+        EventBus.OnBlockTrigger07 += BlockTrigger07;
+        EventBus.OnBlockTrigger08 += BlockTrigger08;
+        EventBus.OnBlockTrigger09 += BlockTrigger09;
+        EventBus.OnBlockTrigger10 += BlockTrigger10;
     }
 
     private void OnDisable()
     {
-        EventBus.OnBlockTrigger01 -= BlocksFalling;
-        EventBus.OnBlockTrigger02 -= SizeBlockEffect;
-        EventBus.OnSpikeTrigger01 -= SpikePositionGoesFar;
-        EventBus.OnSpikeTrigger02 -= SpikePositionComesClose;
-        EventBus.OnSpikeTrigger03 -= SpikePositionDanger;
-        EventBus.OnBlockTrigger03 -= BlockMoveAndTryFall;
+        EventBus.OnBlockTrigger01 -= BlockTrigger01;
+        EventBus.OnBlockTrigger02 -= BlockTrigger02;
+        EventBus.OnBlockTrigger03 -= BlockTrigger03;
+        EventBus.OnBlockTrigger04 -= BlockTrigger04;
+        EventBus.OnBlockTrigger05 -= BlockTrigger05;
+        EventBus.OnBlockTrigger06 -= BlockTrigger06;
+        EventBus.OnBlockTrigger07 -= BlockTrigger07;
+        EventBus.OnBlockTrigger08 -= BlockTrigger08;
+        EventBus.OnBlockTrigger09 -= BlockTrigger09;
+        EventBus.OnBlockTrigger10 -= BlockTrigger10;
     }
 
-    void Start()
-    {
-        StartCoroutine(StairsBlinking());
-    }
 
-    void EnabledAllStairs()
+    void BlockTrigger01()
     {
-        for (int i = 0; i < stairs.Length; i++)
+        StartCoroutine(BlockFall01Coroutine());
+    }
+    IEnumerator BlockFall01Coroutine()
+    {
+        if (blockFall1 == null) yield break;
+
+        Vector3 startPos = blockFall1.transform.position;
+        Vector3 endPos = new Vector3(startPos.x, -80f, startPos.z);
+
+        float fallDuration = 2.5f;
+        float elapsed = 0f;
+
+        while (elapsed < fallDuration)
         {
-            if (stairs[i] != null)
-                stairs[i].SetActive(true);
+            float t = elapsed / fallDuration;
+            blockFall1.transform.position = Vector3.Lerp(startPos, endPos, t);
+            elapsed += Time.deltaTime;
+            yield return null;
         }
+
+        blockFall1.transform.position = endPos;
+        Destroy(blockFall1);
     }
 
-    IEnumerator StairsBlinking()
+
+    void BlockTrigger02()
     {
-        EnabledAllStairs();
+        StartCoroutine(BlockThroughStairsBlinking());
+    }
+    IEnumerator BlockThroughStairsBlinking()
+    {
+        for (int i = 0; i < stairsOfBlocks.Length; i++)
+        {
+            if (stairsOfBlocks[i] != null)
+                stairsOfBlocks[i].SetActive(true);
+        }
 
         int index = 0;
 
         while (true)
         {
-            for (int i = 0; i < stairs.Length; i++)
+            for (int i = 0; i < stairsOfBlocks.Length; i++)
             {
-                if (stairs[i] != null)
-                    stairs[i].SetActive(true);
+                if (stairsOfBlocks[i] != null)
+                    stairsOfBlocks[i].SetActive(true);
             }
 
-            if (stairs[index] != null)
-                stairs[index].SetActive(false);
+            if (stairsOfBlocks[index] != null)
+                stairsOfBlocks[index].SetActive(false);
 
             yield return new WaitForSeconds(3f);
 
-            index = (index + 1) % stairs.Length;
+            index = (index + 1) % stairsOfBlocks.Length;
         }
     }
 
-    void BlocksFalling()
+
+    void BlockTrigger03()
     {
-        StartCoroutine(BlocksFallDown());
+        StartCoroutine(BlocksFallingDowns());
     }
-
-    IEnumerator BlocksFallDown()
+    IEnumerator BlocksFallingDowns()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.40f);
 
-        foreach (GameObject block in blocks)
+        foreach (GameObject block in blockss)
         {
             if (block == null) continue;
 
+            float fallDistance = 10f;
+            float fallSpeed = 0.45f;
+
             Vector3 startPos = block.transform.position;
             Vector3 targetPos = startPos - new Vector3(0f, fallDistance, 0f);
+            float elapsed = 0f;
 
-            while (Vector3.Distance(block.transform.position, targetPos) > 0.01f)
+            while (elapsed < fallSpeed)
             {
-                block.transform.position = Vector3.MoveTowards(
-                    block.transform.position,
-                    targetPos,
-                    fallSpeed * Time.deltaTime
-                );
-
+                float t = elapsed / fallSpeed;
+                block.transform.position = Vector3.Lerp(startPos, targetPos, t);
+                elapsed += Time.deltaTime;
                 yield return null;
             }
 
@@ -107,37 +138,36 @@ public class LevelOneDesigner : MonoBehaviour
         }
     }
 
-    private void SizeBlockEffect()
+
+    void BlockTrigger04()
     {
-        StartCoroutine(ShrinkAndSlideBlock());
+        StartCoroutine(BlockShrinkAndMoveBlock());
     }
-
-    IEnumerator ShrinkAndSlideBlock()
+    IEnumerator BlockShrinkAndMoveBlock()
     {
-        if (sizeBlock == null) yield break;
+        if (blockSizeAndShrink2 == null) yield break;
 
-        float duration = 5f;
-        float moveSpeed = 4f;
 
-        Vector3 originalScale = sizeBlock.transform.localScale;
+        Vector3 originalScale = blockSizeAndShrink2.transform.localScale;
         Vector3 targetScale = new Vector3(originalScale.x / 4.5f, originalScale.y, originalScale.z);
 
-        Vector3 originalPosition = sizeBlock.transform.position;
+        Vector3 originalPosition = blockSizeAndShrink2.transform.position;
         float widthReduction = originalScale.x - targetScale.x;
 
+        float duration = 5f;
         float elapsed = 0f;
 
-        // Scale down from left side
+        // Shrink block
         while (elapsed < duration)
         {
             float t = elapsed / duration;
             float newScaleX = Mathf.Lerp(originalScale.x, targetScale.x, t);
 
-            sizeBlock.transform.localScale = new Vector3(newScaleX, originalScale.y, originalScale.z);
+            blockSizeAndShrink2.transform.localScale = new Vector3(newScaleX, originalScale.y, originalScale.z);
 
-            // Shift position right to keep left side anchored
+            // Keep left side anchored
             float shift = (originalScale.x - newScaleX) / 2f;
-            sizeBlock.transform.position = new Vector3(
+            blockSizeAndShrink2.transform.position = new Vector3(
                 originalPosition.x + shift,
                 originalPosition.y,
                 originalPosition.z
@@ -147,149 +177,242 @@ public class LevelOneDesigner : MonoBehaviour
             yield return null;
         }
 
-        sizeBlock.transform.localScale = targetScale;
-        sizeBlock.transform.position = new Vector3(
+        blockSizeAndShrink2.transform.localScale = targetScale;
+        blockSizeAndShrink2.transform.position = new Vector3(
             originalPosition.x + widthReduction / 2f,
             originalPosition.y,
             originalPosition.z
         );
 
-        Vector3 moveTarget = sizeBlock.transform.position + new Vector3(-15f, 0f, 0f);
+        // Move block left using Lerp
+        Vector3 moveStart = blockSizeAndShrink2.transform.position;
+        Vector3 moveTarget = moveStart + new Vector3(-15f, 0f, 0f);
+        float moveDuration = 0.25f;
+        elapsed = 0f;
 
-        while (Vector3.Distance(sizeBlock.transform.position, moveTarget) > 0.01f)
+        while (elapsed < moveDuration)
         {
-            sizeBlock.transform.position = Vector3.MoveTowards(
-                sizeBlock.transform.position,
-                moveTarget,
-                moveSpeed * Time.deltaTime
-            );
-
+            float t = elapsed / moveDuration;
+            blockSizeAndShrink2.transform.position = Vector3.Lerp(moveStart, moveTarget, t);
+            elapsed += Time.deltaTime;
             yield return null;
         }
 
-        sizeBlock.transform.position = moveTarget;
+        blockSizeAndShrink2.transform.position = moveTarget;
     }
 
-    void SpikePositionGoesFar()
+
+    void BlockTrigger05()
     {
-        StartCoroutine(SpikePosGoFar());
+        StartCoroutine(BlockThroughSpikePosGoFar());
     }
-
-    IEnumerator SpikePosGoFar()
+    IEnumerator BlockThroughSpikePosGoFar()
     {
-        if (spike == null) yield break;
+        if (spike1 == null) yield break;
 
-        Vector3 start = spike.transform.position;
+        Vector3 start = spike1.transform.position;
         Vector3 target = start + new Vector3(4f, 0f, 0f);
-        float speed = 7.5f;
 
-        while (Vector3.Distance(spike.transform.position, target) > 0.01f)
+        float duration = 0.25f;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
         {
-            spike.transform.position = Vector3.MoveTowards(
-                spike.transform.position,
-                target,
-                speed * Time.deltaTime
-            );
+            float t = elapsed / duration;
+            spike1.transform.position = Vector3.Lerp(start, target, t);
 
+            elapsed += Time.deltaTime;
             yield return null;
         }
 
-        spike.transform.position = target;
+        spike1.transform.position = target;
     }
 
-    void SpikePositionComesClose()
+
+    void BlockTrigger06()
     {
-        StartCoroutine(SpikePosComeClose());
+        StartCoroutine(BlockThroughSpikeComeClose());
     }
-
-    IEnumerator SpikePosComeClose()
+    IEnumerator BlockThroughSpikeComeClose()
     {
         if (spike2 == null) yield break;
 
         Vector3 start = spike2.transform.position;
         Vector3 target = start + new Vector3(-4f, 0f, 0f);
-        float speed = 7.5f;
 
-        while (Vector3.Distance(spike2.transform.position, target) > 0.01f)
+        float duration = 0.5f;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
         {
-            spike2.transform.position = Vector3.MoveTowards(
-                spike2.transform.position,
-                target,
-                speed * Time.deltaTime
-            );
+            float t = elapsed / duration;
+            spike2.transform.position = Vector3.Lerp(start, target, t);
 
+            elapsed += Time.deltaTime;
             yield return null;
         }
 
         spike2.transform.position = target;
     }
 
-    void SpikePositionDanger()
-    {
-        StartCoroutine(SpikePosDanger());
-    }
 
-    IEnumerator SpikePosDanger()
+    void BlockTrigger07()
+    {
+        StartCoroutine(BlockThroughSpikePosDanger());
+    }
+    IEnumerator BlockThroughSpikePosDanger()
     {
         if (spike3 == null) yield break;
 
         Vector3 start = spike3.transform.position;
         Vector3 target = start + new Vector3(-7f, 0f, 0f);
-        float speed = 5f;
 
-        while (Vector3.Distance(spike3.transform.position, target) > 0.01f)
+        float duration = 0.75f;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
         {
-            spike3.transform.position = Vector3.MoveTowards(
-                spike3.transform.position,
-                target,
-                speed * Time.deltaTime
-            );
+            float t = elapsed / duration;
+            spike3.transform.position = Vector3.Lerp(start, target, t);
 
+            elapsed += Time.deltaTime;
             yield return null;
         }
 
         spike3.transform.position = target;
     }
 
-    private void BlockMoveAndTryFall()
+
+    private void BlockTrigger08()
     {
-        StartCoroutine(SpecialBlockMovement());
+        StartCoroutine(BlockPushBackAndMove());
     }
-
-    IEnumerator SpecialBlockMovement()
+    IEnumerator BlockPushBackAndMove()
     {
-        if (block == null) yield break;
+        if (block1 == null) yield break;
 
-        float speed = 10f;
-
-        Vector3 startPos = block.transform.position;
+        Vector3 startPos = block1.transform.position;
         Vector3 upPos = startPos + new Vector3(0f, 10f, 0f);
         Vector3 leftPos = upPos + new Vector3(-3.75f, 0f, 0f);
         Vector3 downPos = leftPos + new Vector3(0f, -10f, 0f);
 
-        // Move up
-        while (Vector3.Distance(block.transform.position, upPos) > 0.01f)
+        float elapsed, duration;
+
+        // Move Up
+        elapsed = 0f;
+        duration = 0.5f;
+        while (elapsed < duration)
         {
-            block.transform.position = Vector3.MoveTowards(block.transform.position, upPos, speed * Time.deltaTime);
+            float t = elapsed / duration;
+            block1.transform.position = Vector3.Lerp(startPos, upPos, t);
+            elapsed += Time.deltaTime;
             yield return null;
         }
+        block1.transform.position = upPos;
 
-        // Move left
-        while (Vector3.Distance(block.transform.position, leftPos) > 0.01f)
+        // Move Left
+        elapsed = 0f;
+        duration = 0.25f;
+        while (elapsed < duration)
         {
-            block.transform.position = Vector3.MoveTowards(block.transform.position, leftPos, speed * Time.deltaTime);
+            float t = elapsed / duration;
+            block1.transform.position = Vector3.Lerp(upPos, leftPos, t);
+            elapsed += Time.deltaTime;
             yield return null;
         }
+        block1.transform.position = leftPos;
 
-        // Move down
-        while (Vector3.Distance(block.transform.position, downPos) > 0.01f)
+        // Move Down
+        elapsed = 0f;
+        duration = 0.5f;
+        while (elapsed < duration)
         {
-            block.transform.position = Vector3.MoveTowards(block.transform.position, downPos, speed * Time.deltaTime);
+            float t = elapsed / duration;
+            block1.transform.position = Vector3.Lerp(leftPos, downPos, t);
+            elapsed += Time.deltaTime;
             yield return null;
         }
+        block1.transform.position = downPos;
+    }
 
-        // Final correction
-        block.transform.position = downPos;
+
+    private void BlockTrigger09()
+    {
+        StartCoroutine(BlockPushBackAndMoveAnotherOne());
+    }
+    IEnumerator BlockPushBackAndMoveAnotherOne()
+    {
+
+        // Block2: Move +5 in X 
+        if (block2 != null)
+        {
+            Vector3 start = block2.transform.position;
+            Vector3 target = start + new Vector3(5f, 0f, 0f);
+            float elapsed = 0f;
+            float duration = 0.5f;
+
+            while (elapsed < duration)
+            {
+                float t = elapsed / duration;
+                block2.transform.position = Vector3.Lerp(start, target, t);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            block2.transform.position = target;
+        }
+
+        // Block3: Move +10 in Y, then +5 in X, then -10 in Y
+        if (block3 != null)
+        {
+            Vector3 start = block3.transform.position;
+            Vector3 up = start + new Vector3(0f, 10f, 0f);
+            Vector3 right = up + new Vector3(5f, 0f, 0f);
+            Vector3 down = right + new Vector3(0f, -10f, 0f);
+
+            float elapsed, duration;
+
+            // Move up
+            elapsed = 0f;
+            duration = 0.5f;
+            while (elapsed < duration)
+            {
+                float t = elapsed / duration;
+                block3.transform.position = Vector3.Lerp(start, up, t);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+            block3.transform.position = up;
+
+            // Move right
+            elapsed = 0f;
+            duration = 0.5f;
+            while (elapsed < duration)
+            {
+                float t = elapsed / duration;
+                block3.transform.position = Vector3.Lerp(up, right, t);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+            block3.transform.position = right;
+
+            // Move down
+            elapsed = 0f;
+            duration = 0.5f;
+            while (elapsed < duration)
+            {
+                float t = elapsed / duration;
+                block3.transform.position = Vector3.Lerp(right, down, t);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+            block3.transform.position = down;
+        }
+    }
+
+    private void BlockTrigger10()
+    {
+        Debug.Log("Level 2 Loading");
     }
 
 
