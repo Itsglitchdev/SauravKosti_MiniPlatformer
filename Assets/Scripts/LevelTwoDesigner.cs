@@ -15,6 +15,13 @@ public class LevelTwoDesigner : MonoBehaviour
     [SerializeField] private GameObject stackBlock3;
     [SerializeField] private GameObject[] swingBlocks;
 
+    private ResettableObject[] resettableObjects;
+    
+    void Start()
+    {
+        resettableObjects = GetComponentsInChildren<ResettableObject>(includeInactive: true);
+    }
+
     void OnEnable()
     {
         EventBus.OnBlockTrigger11 += BlockTrigger11;
@@ -26,6 +33,7 @@ public class LevelTwoDesigner : MonoBehaviour
         EventBus.OnBlockTrigger17 += BlockTrigger17;
         EventBus.OnBlockTrigger18 += BlockTrigger18;
         EventBus.OnBlockTrigger19 += BlockTrigger19;
+        EventBus.OnRespawn += ResetLevelTwoState;
     }
 
     void OnDisable()
@@ -39,7 +47,9 @@ public class LevelTwoDesigner : MonoBehaviour
         EventBus.OnBlockTrigger17 -= BlockTrigger17;
         EventBus.OnBlockTrigger18 -= BlockTrigger18;
         EventBus.OnBlockTrigger19 -= BlockTrigger19;
+        EventBus.OnRespawn -= ResetLevelTwoState;
     }
+
 
     void BlockTrigger11()
     {
@@ -232,4 +242,15 @@ public class LevelTwoDesigner : MonoBehaviour
         }
     }
 
+
+    private void ResetLevelTwoState()
+    {
+        foreach (var obj in resettableObjects)
+        {
+            obj.ResetToInitialState();
+        }
+
+        StopAllCoroutines();
+    }
+    
 }

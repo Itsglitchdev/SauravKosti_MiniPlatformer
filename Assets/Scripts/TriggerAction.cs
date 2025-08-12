@@ -4,6 +4,7 @@ public class TriggerAction : MonoBehaviour
 {
     [SerializeField] private TriggerActionType actionType;
     [SerializeField] private bool destroyAfterTrigger = true;
+    [SerializeField] private bool deactivateAfterTrigger = false;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -37,25 +38,25 @@ public class TriggerAction : MonoBehaviour
                 break;
             case TriggerActionType.BlockTrigger_09:
                 EventBus.BlockTrigger09();
-                break;   
+                break;
             case TriggerActionType.LevelOneCompleted:
                 EventBus.TriggerLevelOneCompleted();
-                break;     
+                break;
             case TriggerActionType.BlockTrigger_11:
                 EventBus.BlockTrigger11();
-                break;     
+                break;
             case TriggerActionType.BlockTrigger_12:
                 EventBus.BlockTrigger12();
-                break;  
+                break;
             case TriggerActionType.BlockTrigger_13:
                 EventBus.BlockTrigger13();
-                break; 
+                break;
             case TriggerActionType.BlockTrigger_14:
                 EventBus.BlockTrigger14();
                 break;
             case TriggerActionType.BlockTrigger_15:
                 EventBus.BlockTrigger15();
-                break;       
+                break;
             case TriggerActionType.BlockTrigger_16:
                 EventBus.BlockTrigger16();
                 break;
@@ -67,10 +68,13 @@ public class TriggerAction : MonoBehaviour
                 break;
             case TriggerActionType.BlockTrigger_19:
                 EventBus.BlockTrigger19();
-                break;         
+                break;
+            case TriggerActionType.LevelTwoCompleted:
+                EventBus.TriggerLevelTwoCompleted();
+                break;    
             case TriggerActionType.Respwan:
                 EventBus.TriggerRespawn();
-                break;    
+                break;
             case TriggerActionType.DestroyObject:
                 Destroy(gameObject);
                 break;
@@ -81,6 +85,13 @@ public class TriggerAction : MonoBehaviour
         }
 
         if (destroyAfterTrigger && actionType != TriggerActionType.DestroyObject)
+        {
             Destroy(gameObject);
+        }
+        else if (deactivateAfterTrigger)
+        {
+            gameObject.SetActive(false);
+        }
+
     }
 }

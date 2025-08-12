@@ -17,6 +17,13 @@ public class LevelOneDesigner : MonoBehaviour
     [SerializeField] private GameObject block2;
     [SerializeField] private GameObject block3;
 
+    private ResettableObject[] resettableObjects;
+
+    void Start()
+    {
+        resettableObjects = GetComponentsInChildren<ResettableObject>(includeInactive: true);
+    }
+
 
     private void OnEnable()
     {
@@ -30,6 +37,7 @@ public class LevelOneDesigner : MonoBehaviour
         EventBus.OnBlockTrigger08 += BlockTrigger08;
         EventBus.OnBlockTrigger09 += BlockTrigger09;
         EventBus.OnLevelOneCompleted += LevelOneCompleted;
+        EventBus.OnRespawn += ResetLevelOneState;
     }
 
     private void OnDisable()
@@ -44,6 +52,7 @@ public class LevelOneDesigner : MonoBehaviour
         EventBus.OnBlockTrigger08 -= BlockTrigger08;
         EventBus.OnBlockTrigger09 -= BlockTrigger09;
         EventBus.OnLevelOneCompleted -= LevelOneCompleted;
+        EventBus.OnRespawn -= ResetLevelOneState;
     }
 
 
@@ -70,7 +79,7 @@ public class LevelOneDesigner : MonoBehaviour
         }
 
         blockFall1.transform.position = endPos;
-        Destroy(blockFall1);
+        // Destroy(blockFall1);
     }
 
 
@@ -112,12 +121,17 @@ public class LevelOneDesigner : MonoBehaviour
     }
     IEnumerator BlocksFallingDowns()
     {
+        foreach (GameObject block in blockss)
+        {
+            if (block == null) continue;
+            block.GetComponent<BoxCollider2D>().isTrigger = true;
+        }
+        
         yield return new WaitForSeconds(0.40f);
 
         foreach (GameObject block in blockss)
         {
             if (block == null) continue;
-
             float fallDistance = 10f;
             float fallSpeed = 0.45f;
 
@@ -135,6 +149,7 @@ public class LevelOneDesigner : MonoBehaviour
 
             block.transform.position = targetPos;
             yield return new WaitForSeconds(0.1f);
+            block.GetComponent<BoxCollider2D>().isTrigger = false;
         }
     }
 
@@ -415,5 +430,14 @@ public class LevelOneDesigner : MonoBehaviour
         Debug.Log("Level 2 Loading");
     }
 
+    private void ResetLevelOneState()
+    {
+        foreach (var obj in resettableObjects)
+        {
+            obj.ResetToInitialState();
+        }
+
+        StopAllCoroutines(); 
+    }
 
 }

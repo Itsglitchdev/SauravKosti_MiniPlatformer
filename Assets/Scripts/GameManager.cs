@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     {
         EventBus.OnGameStarted += StartGame;
         EventBus.OnLevelOneCompleted += HandleLevelCompleted;
+        EventBus.OnLevelTwoCompleted += HandleLevelTwoCompleted;
         EventBus.OnRespawn += HandleRespawn;
 
     }
@@ -40,6 +41,7 @@ public class GameManager : MonoBehaviour
     {
         EventBus.OnGameStarted -= StartGame;
         EventBus.OnLevelOneCompleted -= HandleLevelCompleted;
+        EventBus.OnLevelTwoCompleted -= HandleLevelTwoCompleted; 
         EventBus.OnRespawn -= HandleRespawn;
     }
 
@@ -96,6 +98,15 @@ public class GameManager : MonoBehaviour
             levelTwoDesign.SetActive(true);
             EventBus.SetLevelText(currentLevel);
         }
+    }
+
+    private void HandleLevelTwoCompleted()
+    {
+        IsGameStarted = false;
+        player.SetActive(false);
+        levelTwoDesign.SetActive(false);
+
+        EventBus.TriggerLoadingMessage("Coming Soon...");
     }
 
     private void HandleRespawn()

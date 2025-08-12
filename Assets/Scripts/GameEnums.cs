@@ -19,6 +19,7 @@ public enum TriggerActionType
     BlockTrigger_17,
     BlockTrigger_18,
     BlockTrigger_19,
+    LevelTwoCompleted,
     DestroyObject,
     Respwan
 

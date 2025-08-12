@@ -11,9 +11,13 @@ public static class EventBus
     public static Action<int> OnLevelTextSet;
     public static void SetLevelText(int level) => OnLevelTextSet?.Invoke(level);
 
-    // Level Complete
+    // Level One Complete
     public static Action OnLevelOneCompleted;
     public static void TriggerLevelOneCompleted() => OnLevelOneCompleted?.Invoke();
+
+    // Level Two Complete
+    public static Action OnLevelTwoCompleted;
+    public static void TriggerLevelTwoCompleted() => OnLevelTwoCompleted?.Invoke();
 
     // Show loading text
     public static Action<string> OnShowLoadingMessage;
