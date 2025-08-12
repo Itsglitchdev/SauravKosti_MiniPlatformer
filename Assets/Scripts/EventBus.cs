@@ -23,6 +23,10 @@ public static class EventBus
     public static Action OnHideLoading;
     public static void TriggerHideLoading() => OnHideLoading?.Invoke();
 
+    // Resapwan
+    public static Action OnRespawn;
+    public static void TriggerRespawn() => OnRespawn?.Invoke();
+
     public static Action OnBlockTrigger01;
     public static void BlockTrigger01() => OnBlockTrigger01?.Invoke();
 
@@ -53,5 +57,28 @@ public static class EventBus
     public static Action OnBlockTrigger11;
     public static void BlockTrigger11() => OnBlockTrigger11?.Invoke();
 
-    
+    public static Action OnBlockTrigger12;
+    public static void BlockTrigger12() => OnBlockTrigger12?.Invoke();
+
+    public static Action OnBlockTrigger13;
+    public static void BlockTrigger13() => OnBlockTrigger13?.Invoke();
+
+    public static Action OnBlockTrigger14;
+    public static void BlockTrigger14() => OnBlockTrigger14?.Invoke();
+
+    public static Action OnBlockTrigger15;
+    public static void BlockTrigger15() => OnBlockTrigger15?.Invoke();
+
+    public static Action OnBlockTrigger16;
+    public static void BlockTrigger16() => OnBlockTrigger16?.Invoke();
+
+    public static Action OnBlockTrigger17;
+    public static void BlockTrigger17() => OnBlockTrigger17?.Invoke();
+
+    public static Action OnBlockTrigger18;
+    public static void BlockTrigger18() => OnBlockTrigger18?.Invoke();
+
+    public static Action OnBlockTrigger19;
+    public static void BlockTrigger19() => OnBlockTrigger19?.Invoke();
+
 }

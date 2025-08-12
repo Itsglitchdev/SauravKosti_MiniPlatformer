@@ -32,12 +32,15 @@ public class GameManager : MonoBehaviour
     {
         EventBus.OnGameStarted += StartGame;
         EventBus.OnLevelOneCompleted += HandleLevelCompleted;
+        EventBus.OnRespawn += HandleRespawn;
+
     }
 
     void OnDisable()
     {
         EventBus.OnGameStarted -= StartGame;
         EventBus.OnLevelOneCompleted -= HandleLevelCompleted;
+        EventBus.OnRespawn -= HandleRespawn;
     }
 
     private void Start()
@@ -52,7 +55,7 @@ public class GameManager : MonoBehaviour
     {
         currentLevel = 1;
         IsGameStarted = true;
-        // player.transform.position = startLevelOnePos;
+        player.transform.position = startLevelOnePos;
         player.SetActive(true);
         levelOneDesign.SetActive(true);
         EventBus.SetLevelText(currentLevel);
@@ -69,7 +72,7 @@ public class GameManager : MonoBehaviour
 
     private void HandleLevelCompleted()
     {
-        LevelOneComplete(); 
+        LevelOneComplete();
         EventBus.TriggerLoadingMessage("Loading Level 2...");
         StartCoroutine(DelayBeforeLevelChange());
     }
@@ -84,7 +87,7 @@ public class GameManager : MonoBehaviour
     private void LevelChange()
     {
         if (currentLevel == 1)
-        {   
+        {
             IsGameStarted = true;
             currentLevel = 2;
             player.transform.position = startLevelTwoPos;
@@ -94,5 +97,24 @@ public class GameManager : MonoBehaviour
             EventBus.SetLevelText(currentLevel);
         }
     }
+
+    private void HandleRespawn()
+    {
+        StartCoroutine(RespawnCoroutine());
+    }
+    
+    private IEnumerator RespawnCoroutine()
+    {
+        player.SetActive(false); 
+
+        yield return new WaitForSeconds(2f);
+
+        Vector3 targetPos = currentLevel == 1 ? startLevelOnePos : startLevelTwoPos;
+        player.transform.position = targetPos;
+
+        player.SetActive(true); 
+    }
+
+
     
 }
