@@ -38,9 +38,12 @@ public class TriggerAction : MonoBehaviour
             case TriggerActionType.BlockTrigger_09:
                 EventBus.BlockTrigger09();
                 break;   
-            case TriggerActionType.BlockTrigger_10:
-                EventBus.BlockTrigger10();
-                break;      
+            case TriggerActionType.LevelOneCompleted:
+                EventBus.TriggerLevelOneCompleted();
+                break;     
+            case TriggerActionType.BlockTrigger_11:
+                EventBus.BlockTrigger11();
+                break;     
             case TriggerActionType.DestroyObject:
                 Destroy(gameObject);
                 break;

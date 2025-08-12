@@ -9,7 +9,8 @@ public enum TriggerActionType
     BlockTrigger_07,
     BlockTrigger_08,
     BlockTrigger_09,
-    BlockTrigger_10,
+    LevelOneCompleted,
+    BlockTrigger_11,
     DestroyObject
 
 }

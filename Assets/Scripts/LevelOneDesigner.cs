@@ -29,7 +29,7 @@ public class LevelOneDesigner : MonoBehaviour
         EventBus.OnBlockTrigger07 += BlockTrigger07;
         EventBus.OnBlockTrigger08 += BlockTrigger08;
         EventBus.OnBlockTrigger09 += BlockTrigger09;
-        EventBus.OnBlockTrigger10 += BlockTrigger10;
+        EventBus.OnLevelOneCompleted += LevelOneCompleted;
     }
 
     private void OnDisable()
@@ -43,7 +43,7 @@ public class LevelOneDesigner : MonoBehaviour
         EventBus.OnBlockTrigger07 -= BlockTrigger07;
         EventBus.OnBlockTrigger08 -= BlockTrigger08;
         EventBus.OnBlockTrigger09 -= BlockTrigger09;
-        EventBus.OnBlockTrigger10 -= BlockTrigger10;
+        EventBus.OnLevelOneCompleted -= LevelOneCompleted;
     }
 
 
@@ -410,7 +410,7 @@ public class LevelOneDesigner : MonoBehaviour
         }
     }
 
-    private void BlockTrigger10()
+    private void LevelOneCompleted()
     {
         Debug.Log("Level 2 Loading");
     }

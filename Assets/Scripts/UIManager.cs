@@ -7,21 +7,27 @@ public class UIManager : MonoBehaviour
     [Header("Panels")]
     [SerializeField] private GameObject menuPanel;
     [SerializeField] private GameObject gamePanel;
+    [SerializeField] private GameObject loadingPanel;
 
     [Header("Buttons")]
     [SerializeField] private Button startButton;
 
     [Header("Text")]
     [SerializeField] private TextMeshProUGUI levelText;
+    [SerializeField] private TextMeshProUGUI loadingText;
 
     void OnEnable()
     {
         EventBus.OnLevelTextSet += UpdateLevelText;
+        EventBus.OnShowLoadingMessage += ShowLoadingText;
+        EventBus.OnHideLoading += HideLoadingPanel;
     }
 
     void OnDisable()
     {
         EventBus.OnLevelTextSet -= UpdateLevelText;
+        EventBus.OnShowLoadingMessage -= ShowLoadingText;
+        EventBus.OnHideLoading -= HideLoadingPanel;
     }
 
     void Start()
@@ -34,7 +40,7 @@ public class UIManager : MonoBehaviour
     {
         menuPanel.SetActive(true);
         gamePanel.SetActive(false);
-
+        loadingPanel.SetActive(false);
     }
 
     void ButtonEventHandlers()
@@ -53,7 +59,19 @@ public class UIManager : MonoBehaviour
     {
         levelText.text = "Level " + level;
     }
-    
+
+    private void ShowLoadingText(string message)
+    {
+        loadingText.text = message;
+        gamePanel.SetActive(false);
+        loadingPanel.SetActive(true);
+    }
+
+    private void HideLoadingPanel()
+    {
+        loadingPanel.SetActive(false);  
+        gamePanel.SetActive(true);
+    }
     
 
 }

@@ -11,6 +11,18 @@ public static class EventBus
     public static Action<int> OnLevelTextSet;
     public static void SetLevelText(int level) => OnLevelTextSet?.Invoke(level);
 
+    // Level Complete
+    public static Action OnLevelOneCompleted;
+    public static void TriggerLevelOneCompleted() => OnLevelOneCompleted?.Invoke();
+
+    // Show loading text
+    public static Action<string> OnShowLoadingMessage;
+    public static void TriggerLoadingMessage(string message) => OnShowLoadingMessage?.Invoke(message);
+
+    // Hide loading panel
+    public static Action OnHideLoading;
+    public static void TriggerHideLoading() => OnHideLoading?.Invoke();
+
     public static Action OnBlockTrigger01;
     public static void BlockTrigger01() => OnBlockTrigger01?.Invoke();
 
@@ -38,7 +50,8 @@ public static class EventBus
     public static Action OnBlockTrigger09;
     public static void BlockTrigger09() => OnBlockTrigger09?.Invoke();
 
-    public static Action OnBlockTrigger10;
-    public static void BlockTrigger10() => OnBlockTrigger10?.Invoke();
+    public static Action OnBlockTrigger11;
+    public static void BlockTrigger11() => OnBlockTrigger11?.Invoke();
+
     
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -10,6 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject levelTwoDesign;
 
     private readonly Vector3 startLevelOnePos = new Vector3(-5f, 0f, 0f);
+    private readonly Vector3 startLevelTwoPos = new Vector3(450f, 0f, 0f);
 
     public bool IsGameStarted { get; private set; }
     private int currentLevel = 0;
@@ -29,11 +31,13 @@ public class GameManager : MonoBehaviour
     void OnEnable()
     {
         EventBus.OnGameStarted += StartGame;
+        EventBus.OnLevelOneCompleted += HandleLevelCompleted;
     }
 
     void OnDisable()
     {
         EventBus.OnGameStarted -= StartGame;
+        EventBus.OnLevelOneCompleted -= HandleLevelCompleted;
     }
 
     private void Start()
@@ -52,6 +56,43 @@ public class GameManager : MonoBehaviour
         player.SetActive(true);
         levelOneDesign.SetActive(true);
         EventBus.SetLevelText(currentLevel);
+    }
+
+    private void LevelOneComplete()
+    {
+        IsGameStarted = false;
+        player.SetActive(false);
+        levelOneDesign.SetActive(false);
+        levelTwoDesign.SetActive(false);
+
+    }
+
+    private void HandleLevelCompleted()
+    {
+        LevelOneComplete(); 
+        EventBus.TriggerLoadingMessage("Loading Level 2...");
+        StartCoroutine(DelayBeforeLevelChange());
+    }
+
+    private IEnumerator DelayBeforeLevelChange()
+    {
+        yield return new WaitForSeconds(3f);
+        EventBus.TriggerHideLoading();
+        LevelChange();
+    }
+
+    private void LevelChange()
+    {
+        if (currentLevel == 1)
+        {   
+            IsGameStarted = true;
+            currentLevel = 2;
+            player.transform.position = startLevelTwoPos;
+            player.SetActive(true);
+            levelOneDesign.SetActive(false);
+            levelTwoDesign.SetActive(true);
+            EventBus.SetLevelText(currentLevel);
+        }
     }
     
 }
